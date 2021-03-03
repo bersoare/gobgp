@@ -527,6 +527,24 @@ func (peer *peer) handleUpdate(e *fsmMsg) ([]*table.Path, []bgp.RouteFamily, *bg
 					path.SetRejected(true)
 					continue
 				}
+				clusterList := path.GetClusterList()
+				if clusterList != nil {
+					peer.fsm.lock.RLock()
+					rrClusterID := peer.fsm.peerInfo.RouteReflectorClusterID
+					peer.fsm.lock.RUnlock()
+					for _, clusterId := range clusterList {
+						if rrClusterID.Equal(clusterId) {
+							log.WithFields(log.Fields{
+								"Topic":     "Peer",
+								"Key":       peer.ID(),
+								"ClusterId": rrClusterID,
+								"Data":      path,
+							}).Debug("cluster list path attribute has local cluster id, ignore")
+							path.SetRejected(true)
+							continue
+						}
+					}
+				}
 			}
 			paths = append(paths, path)
 		}
