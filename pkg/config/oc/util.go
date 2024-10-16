@@ -177,6 +177,17 @@ func (n *Neighbor) IsAddPathReceiveEnabled(family bgp.RouteFamily) bool {
 	return false
 }
 
+// NexthopUnchanged checks whether NextHopUnchanged is configured for this bgp route family.
+// defaults to false.
+func (n *Neighbor) NexthopUnchanged(family bgp.RouteFamily) bool {
+	for _, af := range n.AfiSafis {
+		if af.State.Family == family {
+			return af.Config.NextHopUnchanged
+		}
+	}
+	return false
+}
+
 type AfiSafis []AfiSafi
 
 func (c AfiSafis) ToRfList() ([]bgp.RouteFamily, error) {

@@ -789,6 +789,7 @@ message MpGracefulRestart {
 message AfiSafiConfig {
   Family family = 1;
   bool enabled = 2;
+  bool next_hop_unchanged = 3;
 }
 
 message AfiSafiState {

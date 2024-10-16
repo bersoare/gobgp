@@ -3991,6 +3991,8 @@ type AfiSafiConfig struct {
 	// This leaf indicates whether the IPv4 Unicast AFI,SAFI is
 	// enabled for the neighbour or group.
 	Enabled bool `mapstructure:"enabled" json:"enabled,omitempty"`
+	// Whether or not to rewrite the next hop for updates sent to this neighbor. 
+	NextHopUnchanged bool `mapstructure:"next-hop-unchanged" json:"next-hop-unchanged,omitempty"`
 }
 
 func (lhs *AfiSafiConfig) Equal(rhs *AfiSafiConfig) bool {
@@ -4003,6 +4005,10 @@ func (lhs *AfiSafiConfig) Equal(rhs *AfiSafiConfig) bool {
 	if lhs.Enabled != rhs.Enabled {
 		return false
 	}
+	if lhs.NextHopUnchanged != rhs.NextHopUnchanged {
+		return false
+	}
+
 	return true
 }
 

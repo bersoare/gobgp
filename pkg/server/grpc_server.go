@@ -557,6 +557,7 @@ func readAfiSafiConfigFromAPIStruct(c *oc.AfiSafiConfig, a *api.AfiSafiConfig) {
 	rf := bgp.AfiSafiToRouteFamily(uint16(a.Family.Afi), uint8(a.Family.Safi))
 	c.AfiSafiName = oc.AfiSafiType(rf.String())
 	c.Enabled = a.Enabled
+	c.NextHopUnchanged = a.NextHopUnchanged
 }
 
 func readAfiSafiStateFromAPIStruct(s *oc.AfiSafiState, a *api.AfiSafiConfig) {

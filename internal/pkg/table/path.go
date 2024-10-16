@@ -244,8 +244,12 @@ func UpdatePathAttrs(logger log.Logger, global *oc.Global, peer *oc.Neighbor, in
 	nexthop := path.GetNexthop()
 	if peer.State.PeerType == oc.PEER_TYPE_EXTERNAL {
 		// NEXTHOP handling
-		if !path.IsLocal() || nexthop.IsUnspecified() {
-			path.SetNexthop(localAddress)
+		// if NexthopUnchanged is disabled for this peer in this route family,
+		// we skip rewriting it.
+		if !peer.NexthopUnchanged(path.GetRouteFamily()) {
+			if !path.IsLocal() || nexthop.IsUnspecified() {
+				path.SetNexthop(localAddress)
+			}
 		}
 
 		// remove-private-as handling
@@ -267,9 +271,12 @@ func UpdatePathAttrs(logger log.Logger, global *oc.Global, peer *oc.Neighbor, in
 		// NEXTHOP handling for iBGP
 		// if the path generated locally set local address as nexthop.
 		// if not, don't modify it.
+		// behaviour can be overridden by setting NexthopUnchanged in this peer's config.
 		// TODO: NEXT-HOP-SELF support
-		if path.IsLocal() && nexthop.IsUnspecified() {
-			path.SetNexthop(localAddress)
+		if !peer.NexthopUnchanged(path.GetRouteFamily()) {
+			if path.IsLocal() && nexthop.IsUnspecified() {
+				path.SetNexthop(localAddress)
+			}
 		}
 
 		// AS_PATH handling for iBGP
