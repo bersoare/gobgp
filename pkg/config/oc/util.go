@@ -304,8 +304,9 @@ func newAfiSafiConfigFromConfigStruct(c *AfiSafi) *api.AfiSafiConfig {
 	rf := extractFamilyFromConfigAfiSafi(c)
 	afi, safi := bgp.RouteFamilyToAfiSafi(bgp.RouteFamily(rf))
 	return &api.AfiSafiConfig{
-		Family:  &api.Family{Afi: api.Family_Afi(afi), Safi: api.Family_Safi(safi)},
-		Enabled: c.Config.Enabled,
+		Family:           &api.Family{Afi: api.Family_Afi(afi), Safi: api.Family_Safi(safi)},
+		Enabled:          c.Config.Enabled,
+		NextHopUnchanged: c.Config.NextHopUnchanged,
 	}
 }
 
